@@ -136,6 +136,7 @@ public abstract class EntityHuman extends EntityLiving implements ICommandListen
                     // TODO: Here occurs the el famoso: https://bugs.mojang.com/browse/MC-849
                     // The MC-849 is also Client-Sided, will it create desync?
                     // ^ -> If so, send correct inventory/item in hand to the client.
+                    // ^^ -> Fix: https://bugs.mojang.com/browse/MC-86252?focusedCommentId=298278&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-298278
                 }
             } else {
                 this.bB();
