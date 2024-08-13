@@ -411,7 +411,7 @@ public class PlayerConnection implements PacketPlayInListener {
                 this.player.setLocation(d1, d2, d3, f2, f3);
                 boolean flag2 = worldserver.getCubes(this.player, this.player.boundingBox.clone().shrink((double) f4, (double) f4, (double) f4)).isEmpty();
 
-                if (flag && (flag1 || !flag2) && !this.player.isSleeping()) {
+                if (flag && (flag1 || !flag2) && !this.player.isSleeping() && !this.player.velocityChanged) {
                     this.a(this.y, this.z, this.q, f2, f3);
                     return;
                 }
