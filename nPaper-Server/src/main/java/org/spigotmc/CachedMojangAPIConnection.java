@@ -92,10 +92,10 @@ public class CachedMojangAPIConnection extends HttpURLConnection
                 HttpURLConnection connection;
                 if ( proxy == null )
                 {
-                    connection = (HttpURLConnection) cachedStreamHandler.getDefaultConnection( url );
+                    connection = (HttpURLConnection) cachedStreamHandler.openConnection( url );
                 } else
                 {
-                    connection = (HttpURLConnection) cachedStreamHandler.getDefaultConnection( url, proxy );
+                    connection = (HttpURLConnection) cachedStreamHandler.openConnection( url, proxy );
                 }
                 connection.setRequestMethod( "POST" );
                 connection.setRequestProperty( "Content-Type", "application/json" );
