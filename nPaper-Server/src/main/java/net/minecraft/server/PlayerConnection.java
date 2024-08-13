@@ -428,9 +428,7 @@ public class PlayerConnection implements PacketPlayInListener {
                         }
                     }
                 } else {
-                	if (this.f > 0) { // Rinny - dont do useless action
-                		this.f = 0;
-                	}
+                	this.f = 0; // Removed condition because it cost nothing to change an int from 0 to 0
                 }
 
                 this.player.onGround = packetplayinflying.i();
@@ -668,28 +666,14 @@ public class PlayerConnection implements PacketPlayInListener {
 
         if (flag) {
             this.player.playerConnection.sendPacket(new PacketPlayOutBlockChange(i, j, k, worldserver));
-            if (l == 0) {
-                --j;
-            }
 
-            if (l == 1) {
-                ++j;
-            }
-
-            if (l == 2) {
-                --k;
-            }
-
-            if (l == 3) {
-                ++k;
-            }
-
-            if (l == 4) {
-                --i;
-            }
-
-            if (l == 5) {
-                ++i;
+            switch (l){
+                case 0 -> --j;
+                case 1 -> ++j;
+                case 2 -> --k;
+                case 3 -> ++k;
+                case 4 -> --i;
+                case 5 -> ++i;
             }
 
             this.player.playerConnection.sendPacket(new PacketPlayOutBlockChange(i, j, k, worldserver));
@@ -965,59 +949,19 @@ public class PlayerConnection implements PacketPlayInListener {
             AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(async, player, s, new LazyPlayerSet());
             this.server.getPluginManager().callEvent(event);
 
-            if (PlayerChatEvent.getHandlerList().getRegisteredListeners().length != 0) {
-                // Evil plugins still listening to deprecated event
-                final PlayerChatEvent queueEvent = new PlayerChatEvent(player, event.getMessage(), event.getFormat(), event.getRecipients());
-                queueEvent.setCancelled(event.isCancelled());
-                Waitable waitable = new Waitable() {
-                    @Override
-                    protected Object evaluate() {
-                        org.bukkit.Bukkit.getPluginManager().callEvent(queueEvent);
+            if (event.isCancelled()) {
+                return;
+            }
 
-                        if (queueEvent.isCancelled()) {
-                            return null;
-                        }
-
-                        String message = String.format(queueEvent.getFormat(), queueEvent.getPlayer().getDisplayName(), queueEvent.getMessage());
-                        PlayerConnection.this.minecraftServer.console.sendMessage(message);
-                        if (((LazyPlayerSet) queueEvent.getRecipients()).isLazy()) {
-                            for (Object player : PlayerConnection.this.minecraftServer.getPlayerList().players) {
-                                ((EntityPlayer) player).sendMessage(CraftChatMessage.fromString(message));
-                            }
-                        } else {
-                            for (Player player : queueEvent.getRecipients()) {
-                                player.sendMessage(message);
-                            }
-                        }
-                        return null;
-                    }};
-                if (async) {
-                    minecraftServer.processQueue.add(waitable);
-                } else {
-                    waitable.run();
-                }
-                try {
-                    waitable.get();
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt(); // This is proper habit for java. If we aren't handling it, pass it on!
-                } catch (ExecutionException e) {
-                    throw new RuntimeException("Exception processing chat event", e.getCause());
+            s = String.format(event.getFormat(), event.getPlayer().getDisplayName(), event.getMessage());
+            minecraftServer.console.sendMessage(s);
+            if (((LazyPlayerSet) event.getRecipients()).isLazy()) {
+                for (Object recipient : minecraftServer.getPlayerList().players) {
+                    ((EntityPlayer) recipient).sendMessage(CraftChatMessage.fromString(s));
                 }
             } else {
-                if (event.isCancelled()) {
-                    return;
-                }
-
-                s = String.format(event.getFormat(), event.getPlayer().getDisplayName(), event.getMessage());
-                minecraftServer.console.sendMessage(s);
-                if (((LazyPlayerSet) event.getRecipients()).isLazy()) {
-                    for (Object recipient : minecraftServer.getPlayerList().players) {
-                        ((EntityPlayer) recipient).sendMessage(CraftChatMessage.fromString(s));
-                    }
-                } else {
-                    for (Player recipient : event.getRecipients()) {
-                        recipient.sendMessage(s);
-                    }
+                for (Player recipient : event.getRecipients()) {
+                     recipient.sendMessage(s);
                 }
             }
         }
@@ -1099,43 +1043,62 @@ public class PlayerConnection implements PacketPlayInListener {
         if (this.player.dead) return;
 
         this.player.v();
-        if (packetplayinentityaction.d() == 1 || packetplayinentityaction.d() == 2) {
-            PlayerToggleSneakEvent event = new PlayerToggleSneakEvent(this.getPlayer(), packetplayinentityaction.d() == 1);
-            this.server.getPluginManager().callEvent(event);
-
-            if (event.isCancelled()) {
-                return;
-            }
-        }
-
-        if (packetplayinentityaction.d() == 4 || packetplayinentityaction.d() == 5) {
-            PlayerToggleSprintEvent event = new PlayerToggleSprintEvent(this.getPlayer(), packetplayinentityaction.d() == 4);
-            this.server.getPluginManager().callEvent(event);
-
-            if (event.isCancelled()) {
-                return;
-            }
-        }
         // CraftBukkit end
+        // nPaper start - replace if by switch
+        switch (packetplayinentityaction.d()) {
+            case 1, 2: {
+                PlayerToggleSneakEvent event = new PlayerToggleSneakEvent(this.getPlayer(), packetplayinentityaction.d() == 1);
+                this.server.getPluginManager().callEvent(event);
 
-        if (packetplayinentityaction.d() == 1) {
-            this.player.setSneaking(true);
-        } else if (packetplayinentityaction.d() == 2) {
-            this.player.setSneaking(false);
-        } else if (packetplayinentityaction.d() == 4) {
-            this.player.setSprinting(true);
-        } else if (packetplayinentityaction.d() == 5) {
-            this.player.setSprinting(false);
-        } else if (packetplayinentityaction.d() == 3) {
-            this.player.a(false, true, true);
-            //this.checkMovement = false; // CraftBukkit - this is handled in teleport
-        } else if (packetplayinentityaction.d() == 6) {
-            if (this.player.vehicle != null && this.player.vehicle instanceof EntityHorse) {
-                ((EntityHorse) this.player.vehicle).w(packetplayinentityaction.e());
+                if (event.isCancelled()) {
+                    return;
+                }
             }
-        } else if (packetplayinentityaction.d() == 7 && this.player.vehicle != null && this.player.vehicle instanceof EntityHorse) {
-            ((EntityHorse) this.player.vehicle).g(this.player);
+            case 4, 5: {
+                PlayerToggleSprintEvent event = new PlayerToggleSprintEvent(this.getPlayer(), packetplayinentityaction.d() == 4);
+                this.server.getPluginManager().callEvent(event);
+
+                if (event.isCancelled()) {
+                    return;
+                }
+            }
         }
+        
+        switch (packetplayinentityaction.d()) {
+            case 1: {
+                this.player.setSneaking(true);
+                return;
+            }
+            case 2: {
+                this.player.setSneaking(false);
+                return;
+            }
+            case 3: {
+                this.player.a(false, true, true);
+                return;
+            }
+            case 4: {
+                this.player.setSprinting(true);
+                return;
+            }
+            case 5: {
+                this.player.setSprinting(false);
+                return;
+            }
+            case 6: {
+                if (this.player.vehicle != null && this.player.vehicle instanceof EntityHorse) {
+                    ((EntityHorse) this.player.vehicle).w(packetplayinentityaction.e());
+                }
+                return;
+            }
+            case 7: {
+                if (this.player.vehicle != null && this.player.vehicle instanceof EntityHorse) {
+                    ((EntityHorse) this.player.vehicle).g(this.player);
+                }
+                return;
+            }
+        }
+        // nPaper end
     }
 
     public void a(PacketPlayInUseEntity packetplayinuseentity) {
