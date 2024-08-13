@@ -15,6 +15,6 @@ Requirements
 
 To build nPaper, the following will need to be installed and available from your shell:
 
-* [JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+* [JDK 22](https://www.oracle.com/ca-en/java/technologies/downloads/#java22)
 * [Git](https://git-scm.com)
 * [Maven](https://maven.apache.org)
