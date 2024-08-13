@@ -126,13 +126,17 @@ public abstract class EntityHuman extends EntityLiving implements ICommandListen
         if (this.f != null) {
             ItemStack itemstack = this.inventory.getItemInHand();
 
-            if (itemstack == this.f) {
+            if (itemstack == this.f && this.f.getItem() instanceof ItemFood) { // Rinny - don't trigger if no food in hand
                 if (this.g <= 25 && this.g % 4 == 0) {
                     this.c(itemstack, 5);
                 }
 
-                if (--this.g == 0 && !this.world.isStatic) {
+                if (this.g > -1 && --this.g == 0 && !this.world.isStatic) { // Rinny - fix this.g going down 24/7
                     this.p();
+                    // TODO: Here occurs the el famoso: https://bugs.mojang.com/browse/MC-849
+                    // The MC-849 is also Client-Sided, will it create desync?
+                    // ^ -> If so, send correct inventory/item in hand to the client.
+                    // ^^ -> Fix: https://bugs.mojang.com/browse/MC-86252?focusedCommentId=298278&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-298278
                 }
             } else {
                 this.bB();
