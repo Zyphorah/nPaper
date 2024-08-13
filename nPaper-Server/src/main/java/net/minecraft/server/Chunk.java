@@ -109,18 +109,18 @@ public class Chunk {
     private int neighbors = 0x1 << 12;
 
     public boolean areNeighborsLoaded(final int radius) {
-        switch(radius) {
-            case 2:
-                return this.neighbors == Integer.MAX_VALUE >> 6;
-            case 1:
+        return switch(radius) {
+            case 2 -> this.neighbors == Integer.MAX_VALUE >> 6;
+            case 1 -> {
+                final byte offset = 12;
                 final int mask =
                     //        x        z   offset            x        z   offset            x         z   offset
-                    ( 0x1 << (1 * 5 +  1 + 12) ) | ( 0x1 << (0 * 5 +  1 + 12) ) | ( 0x1 << (-1 * 5 +  1 + 12) ) |
-                    ( 0x1 << (1 * 5 +  0 + 12) ) | ( 0x1 << (0 * 5 +  0 + 12) ) | ( 0x1 << (-1 * 5 +  0 + 12) ) |
-                    ( 0x1 << (1 * 5 + -1 + 12) ) | ( 0x1 << (0 * 5 + -1 + 12) ) | ( 0x1 << (-1 * 5 + -1 + 12) );
-                return (this.neighbors & mask) == mask;
-            default:
-                throw new UnsupportedOperationException(String.valueOf(radius));
+                    ( 0x1 << (1 * 5 +  1 + offset) ) | ( 0x1 << (0 * 5 +  1 + offset) ) | ( 0x1 << (-1 * 5 +  1 + offset) ) |
+                    ( 0x1 << (1 * 5 +  0 + offset) ) | ( 0x1 << (0 * 5 +  0 + offset) ) | ( 0x1 << (-1 * 5 +  0 + offset) ) |
+                    ( 0x1 << (1 * 5 + -1 + offset) ) | ( 0x1 << (0 * 5 + -1 + offset) ) | ( 0x1 << (-1 * 5 + -1 + offset) );
+                yield (this.neighbors & mask) == mask;
+            }
+            default -> throw new UnsupportedOperationException(String.valueOf(radius));
         }
     }
 
