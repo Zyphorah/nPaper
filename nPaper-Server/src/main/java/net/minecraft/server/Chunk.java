@@ -1221,22 +1221,27 @@ public class Chunk {
         if (this.done) {
             int j;
 
-            if (i == 3) {
-                for (j = 0; j < 16; ++j) {
-                    this.f(15, j);
-                }
-            } else if (i == 1) {
-                for (j = 0; j < 16; ++j) {
-                    this.f(0, j);
-                }
-            } else if (i == 0) {
-                for (j = 0; j < 16; ++j) {
-                    this.f(j, 15);
-                }
-            } else if (i == 2) {
-                for (j = 0; j < 16; ++j) {
-                    this.f(j, 0);
-                }
+            switch (i) {
+                case 0: 
+                    for (j = 0; j < 16; ++j) {
+                        this.f(j, 15);
+                    }
+                break;
+                case 1: 
+                    for (j = 0; j < 16; ++j) {
+                        this.f(0, j);
+                    }
+                break;
+                case 2:
+                    for (j = 0; j < 16; ++j) {
+                        this.f(j, 0);
+                    }
+                break;
+                case 3: 
+                    for (j = 0; j < 16; ++j) {
+                        this.f(15, j);
+                    }
+                break;
             }
         }
     }
