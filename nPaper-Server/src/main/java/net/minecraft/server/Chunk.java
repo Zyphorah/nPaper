@@ -121,7 +121,7 @@ public class Chunk {
                 yield (this.neighbors & mask) == mask;
             }
             default -> throw new UnsupportedOperationException(String.valueOf(radius));
-        }
+        };
     }
 
     public void setNeighborLoaded(final int x, final int z) {
