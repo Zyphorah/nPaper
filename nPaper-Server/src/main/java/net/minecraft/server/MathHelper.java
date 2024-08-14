@@ -210,6 +210,10 @@ public class MathHelper {
     public static double limit(double value, double min, double max) {
         return Math.min(Math.max(value, min), max);
     }
+
+    public static float limit(float value, float min, float max) {
+        return Math.min(Math.max(value, min), max);
+    }
     
     public static int pow2(int value) {
     	return value * value;
