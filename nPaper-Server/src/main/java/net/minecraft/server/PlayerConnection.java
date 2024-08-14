@@ -6,6 +6,7 @@ import java.io.IOException;
 // CraftBukkit start
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Random;
@@ -1751,7 +1752,7 @@ public class PlayerConnection implements PacketPlayInListener {
     public void a(PacketPlayInTabComplete packetplayintabcomplete) {
         // Rinny start - better memory allocation
     	final List<String> suggestions = new ArrayList<>(this.minecraftServer.a(this.player, packetplayintabcomplete.c()));
-        suggestions.sort();
+        Collections.sort(suggestions);
 
         final String[] array = suggestions.toArray(new String[0]);
         this.player.playerConnection.sendPacket(new PacketPlayOutTabComplete(array));
