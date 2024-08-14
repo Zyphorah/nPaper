@@ -1125,68 +1125,71 @@ public class PlayerConnection implements PacketPlayInListener {
 
             if (this.player.f(entity) < d0) {
                 ItemStack itemInHand = this.player.inventory.getItemInHand(); // CraftBukkit
-                if (packetplayinuseentity.c() == EnumEntityUseAction.INTERACT) {
-                    // CraftBukkit start
-                    PlayerInteractEntityEvent event = new PlayerInteractEntityEvent((Player) this.getPlayer(), entity.getBukkitEntity());
-                    this.server.getPluginManager().callEvent(event);
-                    // Rinny start
-                    if ((event.isCancelled() || this.player.inventory.getItemInHand() == null || (this.player.inventory.getItemInHand().getItem() != Items.LEASH || this.player.inventory.getItemInHand().getItem() != Items.NAME_TAG || this.player.inventory.getItemInHand().getItem() != Item.getItemOf(Blocks.CHEST)))){
-                    	final boolean triggerTagOrChestUpdate = itemInHand != null && (itemInHand.getItem() == Items.NAME_TAG && entity instanceof EntityInsentient || itemInHand.getItem() == Item.getItemOf(Blocks.CHEST) && entity instanceof EntityHorse);
-                        final boolean triggerLeashUpdate = itemInHand != null && itemInHand.getItem() == Items.LEASH && entity instanceof EntityInsentient;
-                        
-                        if (triggerLeashUpdate) {
-                        	this.sendPacket(new PacketPlayOutAttachEntity(1, entity, ((EntityInsentient) entity).getLeashHolder()));
+                switch (packetplayinuseentity.c()) {
+                    case INTERACT -> {
+                        // CraftBukkit start
+                        PlayerInteractEntityEvent event = new PlayerInteractEntityEvent((Player) this.getPlayer(), entity.getBukkitEntity());
+                        this.server.getPluginManager().callEvent(event);
+                        // Rinny start
+                        if ((event.isCancelled() || this.player.inventory.getItemInHand() == null || (this.player.inventory.getItemInHand().getItem() != Items.LEASH || this.player.inventory.getItemInHand().getItem() != Items.NAME_TAG || this.player.inventory.getItemInHand().getItem() != Item.getItemOf(Blocks.CHEST)))){
+                            final boolean triggerTagOrChestUpdate = itemInHand != null && (itemInHand.getItem() == Items.NAME_TAG && entity instanceof EntityInsentient || itemInHand.getItem() == Item.getItemOf(Blocks.CHEST) && entity instanceof EntityHorse);
+                            final boolean triggerLeashUpdate = itemInHand != null && itemInHand.getItem() == Items.LEASH && entity instanceof EntityInsentient;
+                            
+                            if (triggerLeashUpdate) {
+                                this.sendPacket(new PacketPlayOutAttachEntity(1, entity, ((EntityInsentient) entity).getLeashHolder()));
+                            }
+                            if (triggerTagOrChestUpdate) {
+                                this.sendPacket(new PacketPlayOutEntityMetadata(entity.getId(), entity.datawatcher, true));
+                            }
                         }
-                        if (triggerTagOrChestUpdate) {
-                        	this.sendPacket(new PacketPlayOutEntityMetadata(entity.getId(), entity.datawatcher, true));
+                        // Rinny end
+                        /*
+                        if (triggerLeashUpdate && (event.isCancelled() || this.player.inventory.getItemInHand() == null || this.player.inventory.getItemInHand().getItem() != Items.LEASH)) {
+                            // Refresh the current leash state
+                            this.sendPacket(new PacketPlayOutAttachEntity(1, entity, ((EntityInsentient) entity).getLeashHolder()));
                         }
-                    }
-                    // Rinny end
-                    /*
-                    if (triggerLeashUpdate && (event.isCancelled() || this.player.inventory.getItemInHand() == null || this.player.inventory.getItemInHand().getItem() != Items.LEASH)) {
-                        // Refresh the current leash state
-                        this.sendPacket(new PacketPlayOutAttachEntity(1, entity, ((EntityInsentient) entity).getLeashHolder()));
-                    }
 
-                    if (triggerTagUpdate && (event.isCancelled() || this.player.inventory.getItemInHand() == null || this.player.inventory.getItemInHand().getItem() != Items.NAME_TAG)) {
-                        // Refresh the current entity metadata
-                        this.sendPacket(new PacketPlayOutEntityMetadata(entity.getId(), entity.datawatcher, true));
-                    }
-                    if (triggerChestUpdate && (event.isCancelled() || this.player.inventory.getItemInHand() == null || this.player.inventory.getItemInHand().getItem() != Item.getItemOf(Blocks.CHEST))) {
-                        this.sendPacket(new PacketPlayOutEntityMetadata(entity.getId(), entity.datawatcher, true));
-                    }*/
+                        if (triggerTagUpdate && (event.isCancelled() || this.player.inventory.getItemInHand() == null || this.player.inventory.getItemInHand().getItem() != Items.NAME_TAG)) {
+                            // Refresh the current entity metadata
+                            this.sendPacket(new PacketPlayOutEntityMetadata(entity.getId(), entity.datawatcher, true));
+                        }
+                        if (triggerChestUpdate && (event.isCancelled() || this.player.inventory.getItemInHand() == null || this.player.inventory.getItemInHand().getItem() != Item.getItemOf(Blocks.CHEST))) {
+                            this.sendPacket(new PacketPlayOutEntityMetadata(entity.getId(), entity.datawatcher, true));
+                        }*/
 
-                    if (event.isCancelled()) {
-                        return;
-                    }
-                    // CraftBukkit end
+                        if (event.isCancelled()) {
+                            return;
+                        }
+                        // CraftBukkit end
 
-                    this.player.q(entity);
+                        this.player.q(entity);
 
-                    // CraftBukkit start
-                    if (itemInHand != null && itemInHand.count <= -1) {
-                        this.player.updateInventory(this.player.activeContainer);
+                        // CraftBukkit start
+                        if (itemInHand != null && itemInHand.count <= -1) {
+                            this.player.updateInventory(this.player.activeContainer);
+                        }
+                        // CraftBukkit end
                     }
-                    // CraftBukkit end
-                } else if (packetplayinuseentity.c() == EnumEntityUseAction.ATTACK) {
-                    if (entity instanceof EntityItem || entity instanceof EntityExperienceOrb || entity instanceof EntityArrow || entity == this.player) {
-                        this.disconnect("Attempting to attack an invalid entity");
-                        this.minecraftServer.warning("Player " + this.player.getName() + " tried to attack an invalid entity");
-                        return;
-                    }
+                    case ATTACK -> {
+                        if (entity instanceof EntityItem || entity instanceof EntityExperienceOrb || entity instanceof EntityArrow || entity == this.player) {
+                            this.disconnect("Attempting to attack an invalid entity");
+                            this.minecraftServer.warning("Player " + this.player.getName() + " tried to attack an invalid entity");
+                            return;
+                        }
 
-                    this.player.attack(entity);
-                    // wuangg start - fix sword blocking desync
-                    if (this.player.isBlocking()) {
-                    	this.player.bA();
-                    }
-                    // wuangg end
+                        this.player.attack(entity);
+                        // wuangg start - fix sword blocking desync
+                        if (this.player.isBlocking()) {
+                            this.player.bA();
+                        }
+                        // wuangg end
 
-                    // CraftBukkit start
-                    if (itemInHand != null && itemInHand.count <= -1) {
-                        this.player.updateInventory(this.player.activeContainer);
+                        // CraftBukkit start
+                        if (itemInHand != null && itemInHand.count <= -1) {
+                            this.player.updateInventory(this.player.activeContainer);
+                        }
+                        // CraftBukkit end
                     }
-                    // CraftBukkit end
                 }
             }
         }
@@ -1253,11 +1256,10 @@ public class PlayerConnection implements PacketPlayInListener {
             {
                 if ( player.activeContainer instanceof ContainerEnchantTable )
                 {
-                    if ( packetplayinwindowclick.slot == 1 )
-                    {
+                    if ( packetplayinwindowclick.slot == 1 ) {
                         return;
-                    } else if ( packetplayinwindowclick.slot > 1 )
-                    {
+                    }
+                    if ( packetplayinwindowclick.slot > 1 ) {
                         packetplayinwindowclick.slot--;
                     }
                 }
@@ -1745,10 +1747,15 @@ public class PlayerConnection implements PacketPlayInListener {
         // CraftBukkit end
     }
 
+
     public void a(PacketPlayInTabComplete packetplayintabcomplete) {
-    	final Set<String> hashSet = new TreeSet<String>(this.minecraftServer.a(this.player, packetplayintabcomplete.c()));
-        final String[] array = hashSet.toArray(new String[hashSet.size()]);
+        // Rinny start - better memory allocation
+    	final List<String> suggestions = new ArrayList<>(this.minecraftServer.a(this.player, packetplayintabcomplete.c()));
+        suggestions.sort();
+
+        final String[] array = suggestions.toArray(new String[0]);
         this.player.playerConnection.sendPacket(new PacketPlayOutTabComplete(array));
+        // Rinny end
     }
 
     public void a(PacketPlayInSettings packetplayinsettings) {
