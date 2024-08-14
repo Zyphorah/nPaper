@@ -245,7 +245,7 @@ public class ProtocolInjector
         {
             packetdataserializer.b( action.ordinal() );
             switch (this.action) {
-                case TITLE, SUBTILTE -> {
+                case TITLE, SUBTITLE -> {
                     if (this.components != null) {
             		    packetdataserializer.a(ComponentSerializer.toString(this.components));
                         return;
