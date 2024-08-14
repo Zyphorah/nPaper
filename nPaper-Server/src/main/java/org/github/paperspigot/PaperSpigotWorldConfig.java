@@ -324,12 +324,6 @@ public class PaperSpigotWorldConfig
         cacheChunkMaps = getBoolean( "cache-chunk-maps", false );
     }
 
-    public int containerUpdateTickRate;
-    private void containerUpdateTickRate()
-    {
-        containerUpdateTickRate = getInt( "container-update-tick-rate", 1 );
-    }
-
     public float tntExplosionVolume;
     private void tntExplosionVolume()
     {

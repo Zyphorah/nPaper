@@ -64,7 +64,6 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     // Spigot start
     public boolean collidesWithEntities = true;
     public int viewDistance; // PaperSpigot - Player view distance API
-    private int containerUpdateDelay; // PaperSpigot
 
     @Override
     public boolean R()
@@ -191,11 +190,8 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
             --this.noDamageTicks;
         }
 
-        // PaperSpigot start - Configurable container update tick rate
-        if (--containerUpdateDelay <= 0) {
-            this.activeContainer.b();
-            containerUpdateDelay = world.paperSpigotConfig.containerUpdateTickRate;
-        }
+        this.activeContainer.b(); // Rinny - always tick activeContainer
+
         // PaperSpigot end
         if (!this.world.isStatic && !this.activeContainer.a((EntityHuman) this)) {
             this.closeInventory();
