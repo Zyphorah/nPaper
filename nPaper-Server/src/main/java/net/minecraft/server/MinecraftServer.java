@@ -438,7 +438,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
     }
 
     // PaperSpigot start - Further improve tick loop
-    private static final int TPS = 20;
+    private static final byte TPS = 20;
     private static final long SEC_IN_NANO = 1_000_000_000;
     private static final long TICK_TIME = SEC_IN_NANO / TPS;
     private static final long MAX_CATCHUP_BUFFER = TICK_TIME * TPS * 60L;

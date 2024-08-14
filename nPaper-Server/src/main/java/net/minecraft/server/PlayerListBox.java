@@ -14,7 +14,7 @@ public class PlayerListBox extends JList<String> implements IUpdatePlayerListBox
         minecraftServer.a(this);
     }
 
-    public void resize() {
+    public void a() {
         if (tickCount++ % UPDATE_INTERVAL == 0) {
             List<String> playerNames = new ArrayList<>();
             for (EntityPlayer player : minecraftServer.getPlayerList().players) {
