@@ -230,13 +230,13 @@ public class ProtocolInjector
         public void a(PacketDataSerializer packetdataserializer) throws IOException
         {
             this.action = EnumTitleAction.values()[packetdataserializer.a()];
-            if (this.action == EnumTitleAction.TITLE || this.action == EnumTitleAction.SUBTITLE) {
-            	this.text = ChatSerializer.a( packetdataserializer.c(32767) );
-            }
-            if (this.action == EnumTitleAction.TIMES) {
-            	this.fadeIn = packetdataserializer.readInt();
-                this.stay = packetdataserializer.readInt();
-                this.fadeOut = packetdataserializer.readInt();
+            switch (this.action) {
+                case TITLE, SUBTITLE -> this.text = ChatSerializer.a( packetdataserializer.c(32767) );
+                case TIMES -> {
+                    this.fadeIn = packetdataserializer.readInt();
+                    this.stay = packetdataserializer.readInt();
+                    this.fadeOut = packetdataserializer.readInt();
+                }
             }
         }
 
@@ -244,17 +244,19 @@ public class ProtocolInjector
         public void b(PacketDataSerializer packetdataserializer) throws IOException
         {
             packetdataserializer.b( action.ordinal() );
-            if (this.action == EnumTitleAction.TITLE || this.action == EnumTitleAction.SUBTITLE) {
-            	if (this.components != null) {
-            		packetdataserializer.a(ComponentSerializer.toString(this.components));
-            	} else {
+            switch (this.action) {
+                case TITLE, SUBTILTE -> {
+                    if (this.components != null) {
+            		    packetdataserializer.a(ComponentSerializer.toString(this.components));
+                        return;
+            	    }
             		packetdataserializer.a(ChatSerializer.a(this.text));
-            	}
-            }
-            if (this.action == EnumTitleAction.TIMES) {
-            	packetdataserializer.writeInt(this.fadeIn);
-            	packetdataserializer.writeInt(this.stay);
-            	packetdataserializer.writeInt(this.fadeOut);
+                }
+                case TIMES -> {
+                    packetdataserializer.writeInt(this.fadeIn);
+            	    packetdataserializer.writeInt(this.stay);
+            	    packetdataserializer.writeInt(this.fadeOut);
+                }
             }
         }
 
