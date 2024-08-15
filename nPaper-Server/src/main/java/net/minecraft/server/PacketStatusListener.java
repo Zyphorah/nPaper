@@ -5,7 +5,6 @@ import java.net.InetSocketAddress;
 // CraftBukkit start
 import java.util.Iterator;
 
-import org.bukkit.craftbukkit.util.CraftIconCache;
 import org.bukkit.entity.Player;
 
 import net.minecraft.util.com.mojang.authlib.GameProfile;
@@ -51,18 +50,8 @@ public class PacketStatusListener implements PacketStatusInListener {
         // CraftBukkit start - fire ping event
         final Object[] players = minecraftServer.getPlayerList().players.toArray();
         class ServerListPingEvent extends org.bukkit.event.server.ServerListPingEvent {
-            CraftIconCache icon = minecraftServer.server.getServerIcon();
-
             ServerListPingEvent() {
                 super(((InetSocketAddress) networkManager.getSocketAddress()).getAddress(), minecraftServer.getMotd(), minecraftServer.getPlayerList().getMaxPlayers());
-            }
-
-            @Override
-            public void setServerIcon(org.bukkit.util.CachedServerIcon icon) {
-                if (!(icon instanceof CraftIconCache)) {
-                    throw new IllegalArgumentException(icon + " was not created by " + org.bukkit.craftbukkit.CraftServer.class);
-                }
-                this.icon = (CraftIconCache) icon;
             }
 
             @Override

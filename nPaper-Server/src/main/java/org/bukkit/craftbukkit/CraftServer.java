@@ -64,7 +64,6 @@ import org.bukkit.craftbukkit.metadata.WorldMetadataStore;
 import org.bukkit.craftbukkit.potion.CraftPotionBrewer;
 import org.bukkit.craftbukkit.scheduler.CraftScheduler;
 import org.bukkit.craftbukkit.scoreboard.CraftScoreboardManager;
-import org.bukkit.craftbukkit.util.CraftIconCache;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.craftbukkit.util.DatFileFilter;
 import org.bukkit.craftbukkit.util.Versioning;
@@ -227,7 +226,6 @@ public final class CraftServer implements Server {
     public CraftScoreboardManager scoreboardManager;
     public boolean playerCommandState;
     private boolean printSaveWarning;
-    private CraftIconCache icon;
     private boolean overrideAllCommandBlockCommands = false;
     private final Pattern validUserPattern = Pattern.compile("^[a-zA-Z0-9_]{2,16}$");
     private final UUID invalidUserUUID = UUID.nameUUIDFromBytes("InvalidUsername".getBytes(Charsets.UTF_8));
@@ -315,7 +313,6 @@ public final class CraftServer implements Server {
         warningState = WarningState.value(configuration.getString("settings.deprecated-verbose"));
         chunkGCPeriod = configuration.getInt("chunk-gc.period-in-ticks");
         chunkGCLoadThresh = configuration.getInt("chunk-gc.load-threshold");
-        loadIcon();
         // Spigot Start - Moved to old location of new DedicatedPlayerList in DedicatedServer
         // loadPlugins();
         // enablePlugins(PluginLoadOrder.STARTUP);
@@ -781,7 +778,6 @@ public final class CraftServer implements Server {
         console.autosavePeriod = configuration.getInt("ticks-per.autosave");
         chunkGCPeriod = configuration.getInt("chunk-gc.period-in-ticks");
         chunkGCLoadThresh = configuration.getInt("chunk-gc.load-threshold");
-        loadIcon();
 
         try {
             playerList.getIPBans().load();
@@ -849,18 +845,6 @@ public final class CraftServer implements Server {
         loadPlugins();
         enablePlugins(PluginLoadOrder.STARTUP);
         enablePlugins(PluginLoadOrder.POSTWORLD);
-    }
-
-    private void loadIcon() {
-        icon = new CraftIconCache(null);
-        try {
-            final File file = new File(new File("."), "server-icon.png");
-            if (file.isFile()) {
-                icon = loadServerIcon0(file);
-            }
-        } catch (Exception ex) {
-            getLogger().log(Level.WARNING, "Couldn't load server icon", ex);
-        }
     }
 
     @SuppressWarnings({ "unchecked", "finally" })
@@ -1757,43 +1741,6 @@ public final class CraftServer implements Server {
         }
         this.printSaveWarning = true;
         getLogger().log(Level.WARNING, "A manual (plugin-induced) save has been detected while server is configured to auto-save. This may affect performance.", warningState == WarningState.ON ? new Throwable() : null);
-    }
-
-    @Override
-    public CraftIconCache getServerIcon() {
-        return icon;
-    }
-
-    @Override
-    public CraftIconCache loadServerIcon(File file) throws Exception {
-        Validate.notNull(file, "File cannot be null");
-        if (!file.isFile()) {
-            throw new IllegalArgumentException(file + " is not a file");
-        }
-        return loadServerIcon0(file);
-    }
-
-    static CraftIconCache loadServerIcon0(File file) throws Exception {
-        return loadServerIcon0(ImageIO.read(file));
-    }
-
-    @Override
-    public CraftIconCache loadServerIcon(BufferedImage image) throws Exception {
-        Validate.notNull(image, "Image cannot be null");
-        return loadServerIcon0(image);
-    }
-
-    static CraftIconCache loadServerIcon0(BufferedImage image) throws Exception {
-    	Validate.isTrue(image.getWidth() == image.getHeight(), "Width must be equals to the height");
-        Validate.isTrue(image.getWidth() == 64, "Must be 64 pixels wide");
-        Validate.isTrue(image.getHeight() == 64, "Must be 64 pixels high");
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(image, "PNG", baos);
-        byte[] imageInByte = baos.toByteArray();
-        String imageDataString = Base64.getEncoder().encodeToString(imageInByte);
-
-        return new CraftIconCache("data:image/png;base64," + imageDataString);
     }
 
     @Override

@@ -442,7 +442,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
     private static final long SEC_IN_NANO = 1_000_000_000;
     private static final long TICK_TIME = SEC_IN_NANO / TPS;
     private static final long MAX_CATCHUP_BUFFER = TICK_TIME * TPS * 60L;
-    private static final int SAMPLE_INTERVAL = 20;
+    private static final byte SAMPLE_INTERVAL = 20;
     public final RollingAverage tps1 = new RollingAverage(60);
     public final RollingAverage tps5 = new RollingAverage(60*5);
     public final RollingAverage tps15 = new RollingAverage(60*15);
@@ -485,14 +485,11 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
                 //long i = ar();
                 //long j = 0L;
 
-                //this.q.setMOTD(new ChatComponentText(this.motd)); // MOTD is initiated by Bukkit we don't need it here
-                this.q.setServerInfo(new ServerPingServerData("1.7.10", 5)); // this is initiated by Bukkit too will clear it later
-                this.a(this.q); // this is initiated by Bukkit too we will only use this one since I've never saw any plugin use ServerListPingEvent::setServerIcon
+                this.a(this.q); // INIT SERVER ICON
 
                 // Spigot start
                 // PaperSpigot start - Further improve tick loop
                 Arrays.fill( recentTps, 20 );
-                //long lastTick = System.nanoTime(), catchupTime = 0, curTime, wait, tickSection = lastTick;
                 final long start = System.nanoTime();
                 long lastTick = start - TICK_TIME, catchupTime = 0, curTime, wait, tickSection = start;
                 // PaperSpigot end
