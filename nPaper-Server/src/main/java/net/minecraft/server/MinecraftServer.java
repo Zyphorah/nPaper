@@ -812,6 +812,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
         SpigotTimings.tickablesTimer.stopTiming(); // Spigot
 
         this.methodProfiler.b();
+        CraftHologram.tickAll();
     }
     
     private boolean needDayUpdate() {

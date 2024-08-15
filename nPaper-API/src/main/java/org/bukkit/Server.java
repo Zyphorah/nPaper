@@ -904,4 +904,11 @@ public interface Server extends PluginMessageRecipient {
     }
 
     Spigot spigot();
+
+    /**
+     * Spawn a new hologram.
+     *
+     * @return Created Hologram
+     */
+    public Hologram newHologram(Location location, String text);
 }

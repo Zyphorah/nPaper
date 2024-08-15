@@ -1813,4 +1813,8 @@ public final class CraftServer implements Server {
     {
         return spigot;
     }
+
+    public Hologram newHologram(Location location, String text) {
+		return new CraftHologram(location.clone(), text);
+	}
 }
