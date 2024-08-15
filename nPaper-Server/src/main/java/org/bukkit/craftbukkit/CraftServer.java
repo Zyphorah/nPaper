@@ -1,5 +1,8 @@
 package org.bukkit.craftbukkit;
 
+import io.noks.Hologram;
+import io.noks.cb.CraftHologram;
+
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
