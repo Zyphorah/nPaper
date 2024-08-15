@@ -595,8 +595,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
             try {
             	final BufferedImage bufferedimage = ImageIO.read(file1);
                 Validate.validState(bufferedimage.getWidth() == bufferedimage.getHeight(), "Width must be equals to the height");
-                Validate.validState(bufferedimage.getWidth() == 64, "Must be 64 pixels wide");
-                Validate.validState(bufferedimage.getHeight() == 64, "Must be 64 pixels high");
+                Validate.validState(bufferedimage.getWidth() == 64, "Server icon must be 64x64");
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 ImageIO.write(bufferedimage, "PNG", baos);
                 byte[] imageInByte = baos.toByteArray();
