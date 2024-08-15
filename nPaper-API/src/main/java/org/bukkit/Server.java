@@ -1,5 +1,7 @@
 package org.bukkit;
 
+import io.noks.Hologram;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.Collection;

@@ -1,3 +1,8 @@
+package io.noks;
+
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
 public interface Hologram {	
 	void delete();
 
