@@ -6,7 +6,6 @@ import java.util.Iterator;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-import org.bukkit.util.CachedServerIcon;
 
 /**
  * Called when a server list ping is coming in. Displayed players can be
