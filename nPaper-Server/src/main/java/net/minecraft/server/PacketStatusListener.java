@@ -123,7 +123,6 @@ public class PacketStatusListener implements PacketStatusInListener {
         playerSample.a(profiles.toArray(new GameProfile[Math.min(profiles.size(), org.spigotmc.SpigotConfig.playerSample)])); // nPaper - limit for Array
 
         ServerPing ping = new ServerPing();
-        ping.setFavicon(event.icon.value);
         ping.setMOTD(new ChatComponentText(event.getMotd()));
         ping.setPlayerSample(playerSample);
         ping.setServerInfo(new ServerPingServerData(minecraftServer.getServerModName() + " " + minecraftServer.getVersion(), networkManager.getVersion())); // TODO: Update when protocol changes
