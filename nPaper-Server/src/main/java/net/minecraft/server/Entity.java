@@ -49,7 +49,7 @@ public abstract class Entity {
     // PaperSpigot end
     // CraftBukkit end
 
-    private static int entityCount;
+    public static int entityCount = 1;
     private int id;
     public double j;
     public boolean k;

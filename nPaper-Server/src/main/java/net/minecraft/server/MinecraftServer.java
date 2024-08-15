@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import io.noks.cb.CraftHologram;
+
 import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;

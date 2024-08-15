@@ -2,13 +2,13 @@ package net.minecraft.server;
 
 public class PacketPlayOutEntityTeleport extends Packet {
 
-    private int a;
-    private int b;
-    private int c;
-    private int d;
+    public int a;
+    public int b;
+    public int c;
+    public int d;
     private byte e;
     private byte f;
-    private boolean onGround; // Spigot - protocol patch
+    public boolean onGround; // Spigot - protocol patch
     private boolean heightCorrection; // Spigot - protocol patch
 
     public PacketPlayOutEntityTeleport() {}

@@ -4,18 +4,18 @@ import java.util.List;
 
 public class PacketPlayOutSpawnEntityLiving extends Packet {
 
-    private int a;
-    private int b;
-    private int c;
-    private int d;
-    private int e;
+    public int a;
+    public int b;
+    public int c;
+    public int d;
+    public int e;
     private int f;
     private int g;
     private int h;
     private byte i;
     private byte j;
     private byte k;
-    private DataWatcher l;
+    public DataWatcher l;
     private List m;
 
     public PacketPlayOutSpawnEntityLiving() {}

@@ -2,16 +2,16 @@ package net.minecraft.server;
 
 public class PacketPlayOutSpawnEntity extends Packet {
 
-    private int a;
-    private int b;
-    private int c;
-    private int d;
+    public int a;
+    public int b;
+    public int c;
+    public int d;
     private int e;
     private int f;
     private int g;
     private int h;
     private int i;
-    private int j;
+    public int j;
     private int k;
 
     public PacketPlayOutSpawnEntity() {}
