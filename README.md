@@ -18,3 +18,9 @@ To build nPaper, the following will need to be installed and available from your
 * [JDK 22](https://www.oracle.com/ca-en/java/technologies/downloads/#java22)
 * [Git](https://git-scm.com)
 * [Maven](https://maven.apache.org)
+
+
+Retired Contributors
+---------------------
+
+* [Noksio](https://github.com/iamnoksio) 
