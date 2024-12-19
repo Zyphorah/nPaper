@@ -1,8 +1,10 @@
 package net.minecraft.server;
 
+import com.sathonay.npaper.utils.EntitySpecificSpawnPacket;
+
 import java.util.ArrayList;
 
-public class EntityPainting extends EntityHanging {
+public class EntityPainting extends EntityHanging implements EntitySpecificSpawnPacket {
 
     public EnumArt art;
 
@@ -77,5 +79,10 @@ public class EntityPainting extends EntityHanging {
         }
 
         this.a(new ItemStack(Items.PAINTING), 0.0F);
+    }
+
+    @Override
+    public Packet createSpecificSpawnPacket() {
+        return new PacketPlayOutSpawnEntityPainting(this);
     }
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.sathonay.npaper.utils.EntitySpecificSpawnPacket;
 import net.minecraft.util.com.google.common.collect.Sets;
 import net.minecraft.util.com.mojang.authlib.GameProfile;
 import net.minecraft.util.io.netty.buffer.Unpooled;
@@ -24,7 +25,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 // CraftBukkit end
 import org.spigotmc.ProtocolData; // Spigot - protocol patch
 
-public class EntityPlayer extends EntityHuman implements ICrafting {
+public class EntityPlayer extends EntityHuman implements ICrafting, EntitySpecificSpawnPacket {
 
     private static final Logger bL = LogManager.getLogger();
     public String locale = "en_US"; // Spigot
@@ -1193,6 +1194,11 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     @Override
     public CraftPlayer getBukkitEntity() {
         return (CraftPlayer) super.getBukkitEntity();
+    }
+
+    @Override
+    public Packet createSpecificSpawnPacket() {
+        return new PacketPlayOutNamedEntitySpawn(this);
     }
     // CraftBukkit end
 }

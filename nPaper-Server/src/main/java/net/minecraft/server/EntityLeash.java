@@ -3,9 +3,10 @@ package net.minecraft.server;
 import java.util.Iterator;
 import java.util.List;
 
+import com.sathonay.npaper.utils.EntitySpecificSpawnPacket;
 import org.bukkit.craftbukkit.event.CraftEventFactory; // CraftBukkit
 
-public class EntityLeash extends EntityHanging {
+public class EntityLeash extends EntityHanging implements EntitySpecificSpawnPacket {
 
     public EntityLeash(World world) {
         super(world);
@@ -133,5 +134,14 @@ public class EntityLeash extends EntityHanging {
         }
 
         return null;
+    }
+
+    @Override
+    public Packet createSpecificSpawnPacket() {
+        final PacketPlayOutSpawnEntity packet = new PacketPlayOutSpawnEntity(this, 77);
+        packet.a(MathHelper.d((float) (this.x * 32)));
+        packet.b(MathHelper.d((float) (this.y * 32)));
+        packet.c(MathHelper.d((float) (this.z * 32)));
+        return packet;
     }
 }

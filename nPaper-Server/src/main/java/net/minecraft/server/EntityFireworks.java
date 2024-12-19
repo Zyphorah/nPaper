@@ -1,6 +1,8 @@
 package net.minecraft.server;
 
-public class EntityFireworks extends Entity {
+import com.sathonay.npaper.utils.EntitySpecificSpawnPacket;
+
+public class EntityFireworks extends Entity implements EntitySpecificSpawnPacket {
 
     private int ticksFlown;
     public int expectedLifespan; // CraftBukkit - private -> public
@@ -126,5 +128,10 @@ public class EntityFireworks extends Entity {
 
     public boolean au() {
         return false;
+    }
+
+    @Override
+    public Packet createSpecificSpawnPacket() {
+        return new PacketPlayOutSpawnEntity(this, 76);
     }
 }

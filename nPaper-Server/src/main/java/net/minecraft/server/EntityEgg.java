@@ -1,13 +1,14 @@
 package net.minecraft.server;
 
 // CraftBukkit start
+import com.sathonay.npaper.utils.EntitySpecificSpawnPacket;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 // CraftBukkit end
 
-public class EntityEgg extends EntityProjectile {
+public class EntityEgg extends EntityProjectile implements EntitySpecificSpawnPacket {
 
     public EntityEgg(World world) {
         super(world);
@@ -64,5 +65,10 @@ public class EntityEgg extends EntityProjectile {
         if (!this.world.isStatic) {
             this.die();
         }
+    }
+
+    @Override
+    public Packet createSpecificSpawnPacket() {
+        return new PacketPlayOutSpawnEntity(this, 62);
     }
 }

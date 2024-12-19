@@ -3,6 +3,7 @@ package net.minecraft.server;
 import java.util.List;
 
 // CraftBukkit start
+import com.sathonay.npaper.utils.EntitySpecificSpawnPacket;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.entity.Vehicle;
@@ -12,7 +13,7 @@ import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 // CraftBukkit end
 
-public class EntityBoat extends Entity {
+public class EntityBoat extends Entity implements EntitySpecificSpawnPacket {
 
     private boolean a;
     private double b;
@@ -500,5 +501,10 @@ public class EntityBoat extends Entity {
             this.a(Item.getItemOf(Blocks.WOOD), 3, 0.0F);
             this.a(Items.STICK, 2, 0.0F);
         }
+    }
+
+    @Override
+    public Packet createSpecificSpawnPacket() {
+        return new PacketPlayOutSpawnEntity(this, 1);
     }
 }

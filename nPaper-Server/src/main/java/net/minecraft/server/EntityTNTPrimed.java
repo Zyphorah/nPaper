@@ -1,8 +1,9 @@
 package net.minecraft.server;
 
+import com.sathonay.npaper.utils.EntitySpecificSpawnPacket;
 import org.bukkit.event.entity.ExplosionPrimeEvent; // CraftBukkit
 
-public class EntityTNTPrimed extends Entity {
+public class EntityTNTPrimed extends Entity implements EntitySpecificSpawnPacket {
 
     public int fuseTicks;
     private EntityLiving source;
@@ -138,5 +139,10 @@ public class EntityTNTPrimed extends Entity {
 
     public EntityLiving getSource() {
         return this.source;
+    }
+
+    @Override
+    public Packet createSpecificSpawnPacket() {
+        return new PacketPlayOutSpawnEntity(this, 50);
     }
 }

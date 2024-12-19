@@ -3,9 +3,10 @@ package net.minecraft.server;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.sathonay.npaper.utils.EntitySpecificSpawnPacket;
 import org.bukkit.craftbukkit.event.CraftEventFactory; // CraftBukkit
 
-public class EntityFallingBlock extends Entity {
+public class EntityFallingBlock extends Entity implements EntitySpecificSpawnPacket {
 
     public Block id; // CraftBukkit - private -> public
     public int data;
@@ -275,5 +276,10 @@ public class EntityFallingBlock extends Entity {
 
     public Block f() {
         return this.id;
+    }
+
+    @Override
+    public Packet createSpecificSpawnPacket() {
+        return new PacketPlayOutSpawnEntity(this, 70, Block.getId(this.f()) | this.data << 16);
     }
 }

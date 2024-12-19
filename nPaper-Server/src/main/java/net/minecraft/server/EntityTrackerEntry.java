@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+import com.sathonay.npaper.utils.EntitySpecificSpawnPacket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 // CraftBukkit start
@@ -473,52 +474,6 @@ public class EntityTrackerEntry {
         }
     }
 
-    private static Map<Class<? extends Entity>, Function<Entity, Packet>> packetCreators = new HashMap<>();
-    static {
-    	packetCreators.put(EntityItem.class, entity -> new PacketPlayOutSpawnEntity(entity, 2, 1));
-        packetCreators.put(EntityPlayer.class, entity -> new PacketPlayOutNamedEntitySpawn((EntityHuman) entity));
-        packetCreators.put(EntityBoat.class, entity -> new PacketPlayOutSpawnEntity(entity, 1));
-        packetCreators.put(EntityFishingHook.class, entity -> {
-            final EntityHuman owner = ((EntityFishingHook) entity).owner;
-            return new PacketPlayOutSpawnEntity(entity, 90, owner != null ? owner.getId() : entity.getId());
-        });
-        packetCreators.put(EntityArrow.class, entity -> {
-        	final Entity shooter = ((EntityArrow) entity).shooter;
-            return new PacketPlayOutSpawnEntity(entity, 60, shooter != null ? shooter.getId() : entity.getId());
-        });
-        packetCreators.put(EntitySnowball.class, entity -> new PacketPlayOutSpawnEntity(entity, 61));
-        packetCreators.put(EntityPotion.class, entity -> new PacketPlayOutSpawnEntity(entity, 73, ((EntityPotion) entity).getPotionValue()));
-        packetCreators.put(EntityThrownExpBottle.class, entity -> new PacketPlayOutSpawnEntity(entity, 75));
-        packetCreators.put(EntityEnderPearl.class, entity -> new PacketPlayOutSpawnEntity(entity, 65));
-        packetCreators.put(EntityEnderSignal.class, entity -> new PacketPlayOutSpawnEntity(entity, 72));
-        packetCreators.put(EntityFireworks.class, entity -> new PacketPlayOutSpawnEntity(entity, 76));
-        packetCreators.put(EntityEgg.class, entity -> new PacketPlayOutSpawnEntity(entity, 62));
-        packetCreators.put(EntityTNTPrimed.class, entity -> new PacketPlayOutSpawnEntity(entity, 50));
-        packetCreators.put(EntityEnderCrystal.class, entity -> new PacketPlayOutSpawnEntity(entity, 51));
-        packetCreators.put(EntityFallingBlock.class, entity -> {
-        	final EntityFallingBlock fallingBlock = (EntityFallingBlock) entity;
-            return new PacketPlayOutSpawnEntity(entity, 70, Block.getId(fallingBlock.f()) | fallingBlock.data << 16);
-        });
-        packetCreators.put(EntityPainting.class, entity -> new PacketPlayOutSpawnEntityPainting((EntityPainting) entity));
-        packetCreators.put(EntityItemFrame.class, entity -> {
-        	final EntityItemFrame itemFrame = (EntityItemFrame) entity;
-        	final PacketPlayOutSpawnEntity packet = new PacketPlayOutSpawnEntity(entity, 71, itemFrame.direction);
-            packet.a(MathHelper.d((float) (itemFrame.x * 32)));
-            packet.b(MathHelper.d((float) (itemFrame.y * 32)));
-            packet.c(MathHelper.d((float) (itemFrame.z * 32)));
-            return packet;
-        });
-        packetCreators.put(EntityLeash.class, entity -> {
-        	final EntityLeash leash = (EntityLeash) entity;
-        	final PacketPlayOutSpawnEntity packet = new PacketPlayOutSpawnEntity(entity, 77);
-            packet.a(MathHelper.d((float) (leash.x * 32)));
-            packet.b(MathHelper.d((float) (leash.y * 32)));
-            packet.c(MathHelper.d((float) (leash.z * 32)));
-            return packet;
-        });
-        packetCreators.put(EntityExperienceOrb.class, entity -> new PacketPlayOutSpawnEntityExperienceOrb((EntityExperienceOrb) entity));
-    }
-    
     private Packet createFireballPacket(EntityFireball entityfireball) {
         byte b0 = 63;
         if (entityfireball instanceof EntitySmallFireball) {
@@ -545,6 +500,7 @@ public class EntityTrackerEntry {
             // CraftBukkit end
         }
 
+        // TODO start : add those to EntitySpecificSpawnPacket
         if (this.tracker instanceof IAnimal || this.tracker instanceof EntityEnderDragon) {
             this.i = MathHelper.d(this.tracker.getHeadRotation() * 256.0F / 360.0F);
             return new PacketPlayOutSpawnEntityLiving((EntityLiving) this.tracker);
@@ -557,11 +513,13 @@ public class EntityTrackerEntry {
         if (this.tracker instanceof EntityFireball) {
             return this.createFireballPacket((EntityFireball) this.tracker);
         }
+        // TODO end
 
-        final Function<Entity, Packet> creator = packetCreators.get(this.tracker.getClass());
-        if (creator != null) {
-            return creator.apply(this.tracker);
+        //nPaper start
+        if (this.tracker instanceof EntitySpecificSpawnPacket) {
+            return ((EntitySpecificSpawnPacket) this.tracker).createSpecificSpawnPacket();
         }
+        //nPaper end
 
         throw new IllegalArgumentException("Don\'t know how to add " + this.tracker.getClass() + "!");
     }

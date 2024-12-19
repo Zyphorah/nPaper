@@ -1,6 +1,7 @@
 package net.minecraft.server;
 
 // CraftBukkit start
+import com.sathonay.npaper.utils.EntitySpecificSpawnPacket;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
@@ -9,7 +10,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.github.paperspigot.PaperSpigotConfig;
 // CraftBukkit end
 
-public class EntityEnderPearl extends EntityProjectile {
+public class EntityEnderPearl extends EntityProjectile implements EntitySpecificSpawnPacket {
 
     private Location lastValidLocation; // nPaper - antipearl glitch
 
@@ -86,5 +87,10 @@ public class EntityEnderPearl extends EntityProjectile {
 
             this.die();
         }
+    }
+
+    @Override
+    public Packet createSpecificSpawnPacket() {
+        return new PacketPlayOutSpawnEntity(this, 65);
     }
 }

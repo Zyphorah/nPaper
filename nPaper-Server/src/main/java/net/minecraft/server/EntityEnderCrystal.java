@@ -1,11 +1,12 @@
 package net.minecraft.server;
 
 // CraftBukkit start
+import com.sathonay.npaper.utils.EntitySpecificSpawnPacket;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 // CraftBukkit end
 
-public class EntityEnderCrystal extends Entity {
+public class EntityEnderCrystal extends Entity implements EntitySpecificSpawnPacket {
 
     public int a;
     public int b;
@@ -84,5 +85,10 @@ public class EntityEnderCrystal extends Entity {
 
             return true;
         }
+    }
+
+    @Override
+    public Packet createSpecificSpawnPacket() {
+        return new PacketPlayOutSpawnEntity(this, 51);
     }
 }

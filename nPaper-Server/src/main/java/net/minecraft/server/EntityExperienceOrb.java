@@ -1,11 +1,12 @@
 package net.minecraft.server;
 
 // CraftBukkit start
+import com.sathonay.npaper.utils.EntitySpecificSpawnPacket;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityTargetEvent;
 // CraftBukkit end
 
-public class EntityExperienceOrb extends Entity {
+public class EntityExperienceOrb extends Entity implements EntitySpecificSpawnPacket {
 
     public int a;
     public int b;
@@ -202,5 +203,10 @@ public class EntityExperienceOrb extends Entity {
 
     public boolean av() {
         return false;
+    }
+
+    @Override
+    public Packet createSpecificSpawnPacket() {
+        return new PacketPlayOutSpawnEntityExperienceOrb(this);
     }
 }

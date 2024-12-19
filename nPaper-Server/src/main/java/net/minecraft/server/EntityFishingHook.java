@@ -6,13 +6,14 @@ import java.util.Iterator;
 import java.util.List;
 
 // CraftBukkit start
+import com.sathonay.npaper.utils.EntitySpecificSpawnPacket;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Fish;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.github.paperspigot.PaperSpigotConfig;
 // CraftBukkit end
 
-public class EntityFishingHook extends Entity {
+public class EntityFishingHook extends Entity implements EntitySpecificSpawnPacket {
 
     private static final List d = Arrays.asList(new PossibleFishingResult[] { (new PossibleFishingResult(new ItemStack(Items.LEATHER_BOOTS), 10)).a(0.9F), new PossibleFishingResult(new ItemStack(Items.LEATHER), 10), new PossibleFishingResult(new ItemStack(Items.BONE), 10), new PossibleFishingResult(new ItemStack(Items.POTION), 10), new PossibleFishingResult(new ItemStack(Items.STRING), 5), (new PossibleFishingResult(new ItemStack(Items.FISHING_ROD), 2)).a(0.9F), new PossibleFishingResult(new ItemStack(Items.BOWL), 10), new PossibleFishingResult(new ItemStack(Items.STICK), 5), new PossibleFishingResult(new ItemStack(Items.INK_SACK, 10, 0), 1), new PossibleFishingResult(new ItemStack(Blocks.TRIPWIRE_SOURCE), 10), new PossibleFishingResult(new ItemStack(Items.ROTTEN_FLESH), 10)});
     private static final List e = Arrays.asList(new PossibleFishingResult[] { new PossibleFishingResult(new ItemStack(Blocks.WATER_LILY), 1), new PossibleFishingResult(new ItemStack(Items.NAME_TAG), 1), new PossibleFishingResult(new ItemStack(Items.SADDLE), 1), (new PossibleFishingResult(new ItemStack(Items.BOW), 1)).a(0.25F).a(), (new PossibleFishingResult(new ItemStack(Items.FISHING_ROD), 1)).a(0.25F).a(), (new PossibleFishingResult(new ItemStack(Items.BOOK), 1)).a()});
@@ -494,5 +495,11 @@ public class EntityFishingHook extends Entity {
         if (this.owner != null) {
             this.owner.hookedFish = null;
         }
+    }
+
+    @Override
+    public Packet createSpecificSpawnPacket() {
+        final EntityHuman owner = this.owner;
+        return new PacketPlayOutSpawnEntity(this, 90, owner != null ? owner.getId() : this.getId());
     }
 }

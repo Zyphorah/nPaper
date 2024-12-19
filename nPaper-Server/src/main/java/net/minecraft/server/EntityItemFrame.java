@@ -1,6 +1,8 @@
 package net.minecraft.server;
 
-public class EntityItemFrame extends EntityHanging {
+import com.sathonay.npaper.utils.EntitySpecificSpawnPacket;
+
+public class EntityItemFrame extends EntityHanging implements EntitySpecificSpawnPacket {
 
     private float e = 1.0F;
 
@@ -157,5 +159,14 @@ public class EntityItemFrame extends EntityHanging {
         }
 
         return true;
+    }
+
+    @Override
+    public Packet createSpecificSpawnPacket() {
+        final PacketPlayOutSpawnEntity packet = new PacketPlayOutSpawnEntity(this, 71, this.direction);
+        packet.a(MathHelper.d((float) (this.x * 32)));
+        packet.b(MathHelper.d((float) (this.y * 32)));
+        packet.c(MathHelper.d((float) (this.z * 32)));
+        return packet;
     }
 }

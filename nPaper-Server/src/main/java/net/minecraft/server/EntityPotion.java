@@ -5,13 +5,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import com.sathonay.npaper.utils.EntitySpecificSpawnPacket;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.github.paperspigot.PaperSpigotConfig;
 // CraftBukkit end
 
-public class EntityPotion extends EntityProjectile {
+public class EntityPotion extends EntityProjectile implements EntitySpecificSpawnPacket {
 
 	public ItemStack item; // CraftBukkit private -> public
 
@@ -154,5 +155,10 @@ public class EntityPotion extends EntityProjectile {
 		if (this.item != null) {
 			nbttagcompound.set("Potion", this.item.save(new NBTTagCompound()));
 		}
+	}
+
+	@Override
+	public Packet createSpecificSpawnPacket() {
+		return new PacketPlayOutSpawnEntity(this, 73, ((EntityPotion) this).getPotionValue());
 	}
 }

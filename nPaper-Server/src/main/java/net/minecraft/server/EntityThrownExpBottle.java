@@ -1,6 +1,8 @@
 package net.minecraft.server;
 
-public class EntityThrownExpBottle extends EntityProjectile {
+import com.sathonay.npaper.utils.EntitySpecificSpawnPacket;
+
+public class EntityThrownExpBottle extends EntityProjectile implements EntitySpecificSpawnPacket {
 
     public EntityThrownExpBottle(World world) {
         super(world);
@@ -49,5 +51,10 @@ public class EntityThrownExpBottle extends EntityProjectile {
 
             this.die();
         }
+    }
+
+    @Override
+    public Packet createSpecificSpawnPacket() {
+        return new PacketPlayOutSpawnEntity(this, 75);
     }
 }

@@ -4,12 +4,13 @@ import java.util.Iterator;
 import java.util.List;
 
 // CraftBukkit start
+import com.sathonay.npaper.utils.EntitySpecificSpawnPacket;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 // CraftBukkit end
 
-public class EntityArrow extends Entity implements IProjectile {
+public class EntityArrow extends Entity implements IProjectile, EntitySpecificSpawnPacket {
 
     private int d = -1;
     private int e = -1;
@@ -479,6 +480,12 @@ public class EntityArrow extends Entity implements IProjectile {
     // CraftBukkit start
     public boolean isInGround() {
         return inGround;
+    }
+
+    @Override
+    public Packet createSpecificSpawnPacket() {
+        final Entity shooter = this.shooter;
+        return new PacketPlayOutSpawnEntity(this, 60, shooter != null ? shooter.getId() : this.getId());
     }
     // CraftBukkit end
 }

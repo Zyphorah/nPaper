@@ -2,13 +2,14 @@ package net.minecraft.server;
 
 import java.util.Iterator;
 
+import com.sathonay.npaper.utils.EntitySpecificSpawnPacket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import org.bukkit.event.player.PlayerPickupItemEvent; // CraftBukkit
 import org.github.paperspigot.PaperSpigotConfig;
 
-public class EntityItem extends Entity {
+public class EntityItem extends Entity implements EntitySpecificSpawnPacket {
 
     private static final Logger d = LogManager.getLogger();
     public int age;
@@ -408,5 +409,10 @@ public class EntityItem extends Entity {
     public void die() {
         this.owner = null;
         super.die();
+    }
+
+    @Override
+    public Packet createSpecificSpawnPacket() {
+        return new PacketPlayOutSpawnEntity(this, 2, 1);
     }
 }
