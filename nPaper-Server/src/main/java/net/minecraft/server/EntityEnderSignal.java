@@ -131,6 +131,6 @@ public class EntityEnderSignal extends Entity implements EntitySpecificSpawnPack
 
     @Override
     public Packet createSpecificSpawnPacket() {
-        return new PacketPlayOutSpawnEntity(entity, 72);
+        return new PacketPlayOutSpawnEntity(this, 72);
     }
 }
