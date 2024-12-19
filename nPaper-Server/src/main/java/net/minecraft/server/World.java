@@ -154,6 +154,23 @@ public abstract class World implements IBlockAccess {
         triggerHoppersList.clear();
     }
 
+    // could use getEntities but urf
+    public List<EntityPlayer> getPlayersAround(ChunkCoordinates coords, int distance)
+    {
+        int cx = coords.x;
+        int cz = coords.z;
+        List<EntityPlayer> list = new ArrayList<>();
+
+        for (int x = cx - distance; x <= cx + distance; ++x) {
+            for (int z = cz - distance; z <= cz + distance; ++z) {
+                Chunk chunk = this.getChunkIfLoaded(x, z);
+                if (chunk != null)
+                    list.addAll(chunk.playersInChunk);
+            }
+        }
+        return list;
+    }
+
     // Helper method for altHopperTicking. Updates chests at the specified location,
     // accounting for double chests. Updating the chest will update adjacent hoppers.
     public void updateChestAndHoppers(int a, int b, int c) {
@@ -610,7 +627,7 @@ public abstract class World implements IBlockAccess {
         // CraftBukkit end
         this.applyPhysics(i, j, k, block);
     }
-    
+
 	protected boolean isChunkLoaded(int i, int j, boolean flag) {
 		return (this.chunkProvider.isChunkLoaded(i, j) && (flag || !this.chunkProvider.getOrCreateChunk(i, j).isEmpty()));
 	}
@@ -1730,7 +1747,7 @@ public abstract class World implements IBlockAccess {
                 if (entity.ag && this.isChunkLoaded(entity.ah, entity.aj)) {
                     this.getChunkAt(entity.ah, entity.aj).a(entity, entity.ai);
                 }
-                
+
                 final boolean loaded = entity.ag = this.isChunkLoaded(k, i1);
                 if (loaded) {
                     this.getChunkAt(k, i1).a(entity);
@@ -2273,7 +2290,7 @@ public abstract class World implements IBlockAccess {
     protected void C() {
         // this.chunkTickList.clear(); // CraftBukkit - removed
         this.methodProfiler.a("buildList");
-        
+
         // Rinny - Moved down
         /*
         int j;
@@ -2281,7 +2298,7 @@ public abstract class World implements IBlockAccess {
         int l;
         */
         // Rinny
-        
+
         // Spigot start
         final int optimalChunks = spigotConfig.chunksPerTick;
         // Quick conditions to allow us to exist early
@@ -2928,7 +2945,7 @@ public abstract class World implements IBlockAccess {
 		            }
 		            // CraftBukkit end
 		            double d5 = entityPlayer.e(d0, d1, d2);
-		
+
 		            if ((d3 < 0.0D || d5 < d3 * d3) && (d4 == -1.0D || d5 < d4)) {
 		                d4 = d5;
 		                entityhuman = entityPlayer;
@@ -2957,25 +2974,25 @@ public abstract class World implements IBlockAccess {
 		                continue;
 		            }
 		            // CraftBukkit end
-		
+
 		            if (!entityPlayer.abilities.isInvulnerable && entityPlayer.isAlive()) {
 		                double d5 = entityPlayer.e(d0, d1, d2);
 		                double d6 = d3;
-		
+
 		                if (entityPlayer.isSneaking()) {
 		                    d6 = d3 * 0.800000011920929D;
 		                }
-		
+
 		                if (entityPlayer.isInvisible()) {
 		                    float f = entityPlayer.bE();
-		
+
 		                    if (f < 0.1F) {
 		                        f = 0.1F;
 		                    }
-		
+
 		                    d6 *= (double) (0.7F * f);
 		                }
-		
+
 		                if ((d3 < 0.0D || d5 < d6 * d6) && (d4 == -1.0D || d5 < d4)) {
 		                    d4 = d5;
 		                    entityhuman = entityPlayer;

@@ -147,7 +147,14 @@ public class EntityTracker implements TrackingRange {
         while (iterator.hasNext()) {
             EntityTrackerEntry entitytrackerentry = iterator.next();
 
-            entitytrackerentry.track(this.world.players);
+            if (entitytrackerentry.tracker instanceof EntityPlayer)
+            {
+                EntityPlayer player = (EntityPlayer) entitytrackerentry.tracker;
+                entitytrackerentry.track(this.world.getPlayersAround(player.getChunkCoordinates(), player.viewDistance));
+            } else {
+                entitytrackerentry.track(this.world.players);
+            }
+
             if (entitytrackerentry.n && entitytrackerentry.tracker instanceof EntityPlayer) {
                 playerTrackers.add((EntityPlayer) entitytrackerentry.tracker);
             }
