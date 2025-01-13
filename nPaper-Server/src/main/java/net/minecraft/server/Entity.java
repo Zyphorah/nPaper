@@ -843,7 +843,12 @@ public abstract class Entity {
     }
 
     public boolean N() {
-        int currentTick = MinecraftServer.currentTick;
+        // Rinny start - fix web fall damage
+    	if (this.world.a(this.boundingBox.grow(0.0D, -0.4000000059604645D, 0.0D).shrink(0.001D, 0.001D, 0.001D), Material.WEB)) {
+    		this.fallDistance = 0.0F;
+    		return false;
+    	}
+    	// Rinny end
             if (this.world.a(this.boundingBox.grow(0.0D, -0.4000000059604645D, 0.0D).shrink(0.001D, 0.001D, 0.001D), Material.WATER, this)) {
                 if (!this.inWater && !this.justCreated) {
                     float f = MathHelper.sqrt(this.motX * this.motX * 0.20000000298023224D + this.motY * this.motY + this.motZ * this.motZ * 0.20000000298023224D) * 0.2F;
@@ -855,9 +860,11 @@ public abstract class Entity {
                     this.makeSound(this.O(), f, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
                     float f1 = (float) MathHelper.floor(this.boundingBox.b) + 1;
 
+                    float f2;
+                    float f3;
                     for (int i = 0; (float) i < 1.0F + this.width * 20.0F; ++i) {
-                        float f2 = (this.random.nextFloat() * 2.0F - 1.0F) * this.width;
-                        float f3 = (this.random.nextFloat() * 2.0F - 1.0F) * this.width;
+                        f2 = (this.random.nextFloat() * 2.0F - 1.0F) * this.width;
+                        f3 = (this.random.nextFloat() * 2.0F - 1.0F) * this.width;
                         this.world.addParticle("bubble", this.locX + (double) f2, f1, this.locZ + (double) f3, this.motX, this.motY - (double) (this.random.nextFloat() * 0.2F), this.motZ);
                         f2 = (this.random.nextFloat() * 2.0F - 1.0F) * this.width;
                         f3 = (this.random.nextFloat() * 2.0F - 1.0F) * this.width;
