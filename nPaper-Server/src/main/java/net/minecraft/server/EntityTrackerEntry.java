@@ -474,24 +474,6 @@ public class EntityTrackerEntry {
         }
     }
 
-    private Packet createFireballPacket(EntityFireball entityfireball) {
-        byte b0 = 63;
-        if (entityfireball instanceof EntitySmallFireball) {
-            b0 = 64;
-        } else if (entityfireball instanceof EntityWitherSkull) {
-            b0 = 66;
-        }
-        final PacketPlayOutSpawnEntity packet = new PacketPlayOutSpawnEntity(entityfireball, b0, entityfireball.shooter != null ? entityfireball.shooter.getId() : 0);
-        packet.d((int) (entityfireball.dirX * 8000.0D));
-        packet.e((int) (entityfireball.dirY * 8000.0D));
-        packet.f((int) (entityfireball.dirZ * 8000.0D));
-        return packet;
-    }
-
-    private Packet createMinecartPacket(EntityMinecartAbstract entityminecartabstract) {
-        return new PacketPlayOutSpawnEntity(this.tracker, 10, entityminecartabstract.m());
-    }
-
     private Packet c() {
         if (this.tracker.dead) {
             // CraftBukkit start - Remove useless error spam, just return
@@ -500,26 +482,18 @@ public class EntityTrackerEntry {
             // CraftBukkit end
         }
 
+        //nPaper start
+        if (this.tracker instanceof EntitySpecificSpawnPacket essp) {
+            return essp.createSpecificSpawnPacket();
+        }
+        //nPaper end
+
         // TODO start : add those to EntitySpecificSpawnPacket
         if (this.tracker instanceof IAnimal || this.tracker instanceof EntityEnderDragon) {
             this.i = MathHelper.d(this.tracker.getHeadRotation() * 256.0F / 360.0F);
             return new PacketPlayOutSpawnEntityLiving((EntityLiving) this.tracker);
         }
-
-        if (this.tracker instanceof EntityMinecartAbstract) {
-        	return this.createMinecartPacket((EntityMinecartAbstract) this.tracker);
-        }
-
-        if (this.tracker instanceof EntityFireball) {
-            return this.createFireballPacket((EntityFireball) this.tracker);
-        }
         // TODO end
-
-        //nPaper start
-        if (this.tracker instanceof EntitySpecificSpawnPacket) {
-            return ((EntitySpecificSpawnPacket) this.tracker).createSpecificSpawnPacket();
-        }
-        //nPaper end
 
         throw new IllegalArgumentException("Don\'t know how to add " + this.tracker.getClass() + "!");
     }

@@ -82,4 +82,9 @@ public class EntitySmallFireball extends EntityFireball {
     public boolean damageEntity(DamageSource damagesource, float f) {
         return false;
     }
+
+    @Override
+    public int getSpawnId() {
+        return 64;
+    }
 }

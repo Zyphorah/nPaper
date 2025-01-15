@@ -1,11 +1,13 @@
 package net.minecraft.server;
 
+import com.sathonay.npaper.utils.EntitySpecificSpawnPacket;
+
 import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.craftbukkit.event.CraftEventFactory; // CraftBukkit
 
-public abstract class EntityFireball extends Entity {
+public abstract class EntityFireball extends Entity implements EntitySpecificSpawnPacket {
 
     private int e = -1;
     private int f = -1;
@@ -277,5 +279,18 @@ public abstract class EntityFireball extends Entity {
 
     public float d(float f) {
         return 1.0F;
+    }
+
+    public int getSpawnId() {
+        return 63;
+    }
+
+    @Override
+    public Packet createSpecificSpawnPacket() {
+        final PacketPlayOutSpawnEntity packet = new PacketPlayOutSpawnEntity(this, getSpawnId(), this.shooter != null ? this.shooter.getId() : 0);
+        packet.d((int) (this.dirX * 8000.0D));
+        packet.e((int) (this.dirY * 8000.0D));
+        packet.f((int) (this.dirZ * 8000.0D));
+        return packet;
     }
 }

@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import com.sathonay.npaper.utils.EntitySpecificSpawnPacket;
 import java.util.List;
 
 // CraftBukkit start
@@ -11,7 +12,7 @@ import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.util.Vector;
 // CraftBukkit end
 
-public abstract class EntityMinecartAbstract extends Entity {
+public abstract class EntityMinecartAbstract extends Entity implements EntitySpecificSpawnPacket {
 
     private boolean a;
     private String b;
@@ -910,4 +911,9 @@ public abstract class EntityMinecartAbstract extends Entity {
         derailedZ = derailed.getZ();
     }
     // CraftBukkit end
+
+    @Override
+    public Packet createSpecificSpawnPacket() {
+        return new PacketPlayOutSpawnEntity(this, 10, m());
+    }
 }
