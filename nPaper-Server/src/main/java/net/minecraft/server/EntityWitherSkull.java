@@ -95,4 +95,9 @@ public class EntityWitherSkull extends EntityFireball {
     public void setCharged(boolean flag) {
         this.datawatcher.watch(10, Byte.valueOf((byte) (flag ? 1 : 0)));
     }
+
+    @Override
+    public int getSpawnId() {
+        return 66;
+    }
 }
