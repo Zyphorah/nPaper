@@ -1,6 +1,7 @@
 package net.minecraft.server;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -71,7 +72,7 @@ public class EntityTracker implements TrackingRange {
         this.addEntity(entity, i, j, false);
     }
     
-	private List<EntityPlayer> getPlayersToTrack(Entity entity, int range) {
+	public List<EntityPlayer> getPlayersToTrack(Entity entity, int range) { // nPaper - private -> public
 		final List<EntityPlayer> players = new ArrayList<EntityPlayer>();
 		for (double x = entity.locX - range; x <= entity.locX + range; x += 16.0D) {
 			for (double z = entity.locZ - range; z <= entity.locZ + range; z += 16.0D) {
@@ -83,6 +84,19 @@ public class EntityTracker implements TrackingRange {
 		} 
 		return players;
 	}
+
+    public void performOnInRangePlayers(Entity entity, int range, Consumer<EntityPlayer> function)
+    {
+        for (double x = entity.locX - range; x <= entity.locX + range; x += 16.0D) {
+            for (double z = entity.locZ - range; z <= entity.locZ + range; z += 16.0D) {
+                final Chunk chunk = entity.world.getChunkIfLoaded((int)x >> 4, (int)z >> 4);
+                if (chunk != null) {
+                    for (EntityPlayer entityPlayer : chunk.playersInChunk)
+                        function.accept(entityPlayer);
+                }
+            }
+        }
+    }
 
     public void addEntity(Entity entity, int i, int j, boolean flag) {
         org.spigotmc.AsyncCatcher.catchOp( "entity track"); // Spigot
@@ -100,7 +114,8 @@ public class EntityTracker implements TrackingRange {
 
             this.c.add(entitytrackerentry);
             this.trackedEntities.a(entity.getId(), entitytrackerentry);
-            entitytrackerentry.scanPlayers(getPlayersToTrack(entity, i));
+            //entitytrackerentry.scanPlayers(getPlayersToTrack(entity, i));
+            performOnInRangePlayers(entity, i, entitytrackerentry::updatePlayer);
         } catch (Throwable throwable) {
             CrashReport crashreport = CrashReport.a(throwable, "Adding entity to track");
             CrashReportSystemDetails crashreportsystemdetails = crashreport.a("Entity To Track");
@@ -147,13 +162,10 @@ public class EntityTracker implements TrackingRange {
         while (iterator.hasNext()) {
             EntityTrackerEntry entitytrackerentry = iterator.next();
 
-            if (entitytrackerentry.tracker instanceof EntityPlayer)
-            {
-                EntityPlayer player = (EntityPlayer) entitytrackerentry.tracker;
-                entitytrackerentry.track(this.world.getPlayersAround(player.getChunkCoordinates(), player.viewDistance));
-            } else {
-                entitytrackerentry.track(this.world.players);
-            }
+            /*entitytrackerentry.track(
+                    this.getPlayersToTrack(entitytrackerentry.tracker, this.getEntityTrackingRange(entitytrackerentry.tracker, 0))
+            );*/
+            performOnInRangePlayers(entitytrackerentry.tracker, this.getEntityTrackingRange(entitytrackerentry.tracker, 0), entitytrackerentry::updatePlayer);
 
             if (entitytrackerentry.n && entitytrackerentry.tracker instanceof EntityPlayer) {
                 playerTrackers.add((EntityPlayer) entitytrackerentry.tracker);

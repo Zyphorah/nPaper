@@ -22,7 +22,7 @@ public class EntityTrackerEntry {
 
     private static final Logger p = LogManager.getLogger();
     public Entity tracker;
-    public int b;
+    public int b; // trackingRange
     public int c;
     public int xLoc;
     public int yLoc;
@@ -156,8 +156,8 @@ public class EntityTrackerEntry {
                         this.v = 0;
                         // CraftBukkit start - Refresh list of who can see a player before sending teleport packet
                         if (this.tracker instanceof EntityPlayer) {
-                            EntityPlayer player = (EntityPlayer) this.tracker;
-                            this.scanPlayers(this.tracker.world.getPlayersAround(player.getChunkCoordinates(), player.viewDistance)); // get players around in view distance // scan all players of the world (that's fix invisibility after teleportation)
+                            //this.scanPlayers(((WorldServer) this.tracker.world).getTracker().getPlayersToTrack(this.tracker, this.b)); // get players around in view distance // scan all players of the world (that's fix invisibility after teleportation)
+                            ((WorldServer) this.tracker.world).getTracker().performOnInRangePlayers(this.tracker, this.b, this::updatePlayer);
                         }
                         // CraftBukkit end
                         packet = new PacketPlayOutEntityTeleport(this.tracker.getId(), i, j, k, (byte) l, (byte) i1, tracker.onGround, tracker instanceof EntityFallingBlock || tracker instanceof EntityTNTPrimed); // Spigot - protocol patch
