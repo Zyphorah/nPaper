@@ -160,12 +160,7 @@ public class EntityTracker implements TrackingRange {
         while (iterator.hasNext()) {
             EntityTrackerEntry entitytrackerentry = iterator.next();
 
-            /*entitytrackerentry.track(
-                    this.getPlayersToTrack(entitytrackerentry.tracker, this.getEntityTrackingRange(entitytrackerentry.tracker, 0))
-            );*/
             entitytrackerentry.track();
-            performOnInRangePlayers(entitytrackerentry.tracker, this.getEntityTrackingRange(entitytrackerentry.tracker, 0), entitytrackerentry::updatePlayer);
-
             if (entitytrackerentry.n && entitytrackerentry.tracker instanceof EntityPlayer) {
                 playerTrackers.add((EntityPlayer) entitytrackerentry.tracker);
             }

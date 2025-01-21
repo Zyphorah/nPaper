@@ -75,6 +75,8 @@ public class EntityTrackerEntry {
             this.s = this.tracker.locZ;
             this.isMoving = true;
             this.n = true;
+            EntityTracker entityTracker = ((WorldServer) this.tracker.world).getTracker();
+            entityTracker.performOnInRangePlayers(this.tracker, entityTracker.getEntityTrackingRange(this.tracker, 0), this::updatePlayer);
         }
 
         if (this.w != this.tracker.vehicle || this.tracker.vehicle != null && this.m % 60 == 0) {
