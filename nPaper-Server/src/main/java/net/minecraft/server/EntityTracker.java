@@ -10,13 +10,11 @@ import org.spigotmc.TrackingRange;
 public class EntityTracker implements TrackingRange {
 
     private static final Logger a = LogManager.getLogger();
-    private final WorldServer world;
     private Set<EntityTrackerEntry> c = new HashSet<>();
     public IntHashMap trackedEntities = new IntHashMap(); // CraftBukkit - private -> public
     private int e;
 
     public EntityTracker(WorldServer worldserver) {
-        this.world = worldserver;
         this.e = worldserver.getMinecraftServer().getPlayerList().d();
     }
 
@@ -165,8 +163,8 @@ public class EntityTracker implements TrackingRange {
             /*entitytrackerentry.track(
                     this.getPlayersToTrack(entitytrackerentry.tracker, this.getEntityTrackingRange(entitytrackerentry.tracker, 0))
             );*/
-            performOnInRangePlayers(entitytrackerentry.tracker, this.getEntityTrackingRange(entitytrackerentry.tracker, 0), entitytrackerentry::updatePlayer);
             entitytrackerentry.track();
+            performOnInRangePlayers(entitytrackerentry.tracker, this.getEntityTrackingRange(entitytrackerentry.tracker, 0), entitytrackerentry::updatePlayer);
 
             if (entitytrackerentry.n && entitytrackerentry.tracker instanceof EntityPlayer) {
                 playerTrackers.add((EntityPlayer) entitytrackerentry.tracker);
