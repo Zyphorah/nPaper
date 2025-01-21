@@ -67,7 +67,7 @@ public class EntityTrackerEntry {
         return this.tracker.getId();
     }
 
-    public void track(List list) {
+    public void track() {
         this.n = false;
         if (!this.isMoving || this.tracker.e(this.q, this.r, this.s) > 16.0D) {
             this.q = this.tracker.locX;
@@ -75,7 +75,6 @@ public class EntityTrackerEntry {
             this.s = this.tracker.locZ;
             this.isMoving = true;
             this.n = true;
-            this.scanPlayers(list);
         }
 
         if (this.w != this.tracker.vehicle || this.tracker.vehicle != null && this.m % 60 == 0) {

@@ -166,6 +166,7 @@ public class EntityTracker implements TrackingRange {
                     this.getPlayersToTrack(entitytrackerentry.tracker, this.getEntityTrackingRange(entitytrackerentry.tracker, 0))
             );*/
             performOnInRangePlayers(entitytrackerentry.tracker, this.getEntityTrackingRange(entitytrackerentry.tracker, 0), entitytrackerentry::updatePlayer);
+            entitytrackerentry.track();
 
             if (entitytrackerentry.n && entitytrackerentry.tracker instanceof EntityPlayer) {
                 playerTrackers.add((EntityPlayer) entitytrackerentry.tracker);
