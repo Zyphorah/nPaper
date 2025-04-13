@@ -10,17 +10,16 @@ A fork of Paper 1.7 with changes (optimizations, 1.8 client interaction, Hologra
   </a>
 </p>
 
-Requirements
+## Requirements
 ------------
 
-To build nPaper, the following will need to be installed and available from your shell:
+To build nPaper, the following must be installed and available from your shell:
 
 * [JDK 22](https://www.oracle.com/ca-en/java/technologies/downloads/#java22)
 * [Git](https://git-scm.com)
 * [Maven](https://maven.apache.org)
 
-
-Retired Contributors
+## Retired Contributors
 ---------------------
 
-* [Noksio](https://github.com/iamnoksio) 
+* [Noksio](https://github.com/iamnoksio)
